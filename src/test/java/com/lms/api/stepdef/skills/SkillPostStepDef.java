@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.lms.api.dbmanager.Dbmanager;
 import com.lms.api.utilities.ExcelReaderUtil;
 import com.lms.api.utilities.PropertiesReaderUtil;
@@ -100,7 +101,7 @@ public class SkillPostStepDef {
 		// Retrieve an updated skill_id from tbl_lms_skillmaster
 		ArrayList<String> dbValidList = dbmanager.dbvalidationSkill(newSkill_id);
 		String dbskill_Id = dbValidList.get(0);
-
+		ExtentCucumberAdapter.addTestStepLog("Newly created Skill record from DB : " + dbValidList.toString());
 		// DB validation for a post request for an newly created skill_id
 		assertEquals(newSkill_id, dbskill_Id);
 	}

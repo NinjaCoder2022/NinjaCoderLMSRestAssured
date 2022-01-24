@@ -45,7 +45,6 @@ public class UserDeleteStepDef {
 
 		this.scenario = scenario;
 		sheetDelete = properties.getProperty("sheetDelete");
-		// System.out.println(sheetPost);
 		excelSheetReaderUtil = new ExcelReaderUtil(properties.getProperty("userapi.excel.path"));
 		excelSheetReaderUtil.readSheet(sheetDelete);
 	}
@@ -92,9 +91,7 @@ public class UserDeleteStepDef {
 	public void user_should_receive_status_code_and_message_for_delete() throws Exception {
 		String expStatusCode = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "StatusCode");
 		String expMessage = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "Message");
-		// System.out.println("Expected response code: " + expStatusCode + "Expected
-		// message is: " + expMessage);
-
+		
 		String responseBody = response.prettyPrint();
 		// Status code validation
 		assertEquals(Integer.parseInt(expStatusCode), response.statusCode());
@@ -104,11 +101,11 @@ public class UserDeleteStepDef {
 		System.out.println(js);
 		response.then().assertThat().extract().asString().contains("Deleted");
 
-		String deleteUser = "U297";
+		String deleteUser = "U387";
 		try {
 		// Retrieve an auto generated user_id for newly created user from tbl_lms_user
 		ArrayList<String> dbValidList = dbmanager.dbvalidationUser(deleteUser);
-		//System.out.println(dbValidList.);
+		//System.out.println(dbValidList);
 		if (dbValidList.isEmpty()) 
 			//System.out.println("User Deleted");
 		ExtentCucumberAdapter.addTestStepLog("User " + deleteUser + " is Deleted");
@@ -116,9 +113,7 @@ public class UserDeleteStepDef {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		// DB validation for a post request for a newly created user_id
-		//assertEquals(deleteUser, dbUserId);
-
+		
 		// System.out.println("Response Status code is => " + response.statusCode());
 		// System.out.println("Response Body is => " + responseBody);
 	}

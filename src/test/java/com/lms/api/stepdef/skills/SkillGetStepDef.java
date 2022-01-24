@@ -1,5 +1,7 @@
 package com.lms.api.stepdef.skills;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -7,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.lms.api.dbmanager.Dbmanager;
 import com.lms.api.utilities.ExcelReaderUtil;
 import com.lms.api.utilities.PropertiesReaderUtil;
@@ -77,6 +80,8 @@ public class SkillGetStepDef {
 				+ "  Expected Response Status code=>  " + expStatusCode);
 		System.out.println("Response Body is =>  " + responseBody);
 		assertEquals(Integer.parseInt(expStatusCode), response.statusCode());
+		assertThat(responseBody, matchesJsonSchemaInClasspath("skillGetAll_schema.json"));
+		System.out.println("Response Status code is =>  " + response.statusCode());
 
 	}
 
@@ -111,10 +116,10 @@ public class SkillGetStepDef {
 		// Retrieve a particular user record from tbl_lms_skillmaster
 		ArrayList<String> dbValidList = dbmanager.dbvalidationSkill(rsSkill_id);
 		String dbskill_Id = dbValidList.get(0);
-
+System.out.println("Skilld id from db :  " +dbskill_Id);
 		// DB validation for a get request for an existing skill_id
 		assertEquals(skill_id, dbskill_Id);
-
+		ExtentCucumberAdapter.addTestStepLog("Get specific skill " +dbskill_Id+ " record from DB : " + dbValidList.toString());
 	}
 
 	@When("User sends the request with invalid Skill Id")

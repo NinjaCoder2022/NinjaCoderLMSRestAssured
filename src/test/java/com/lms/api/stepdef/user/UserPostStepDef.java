@@ -110,7 +110,7 @@ public class UserPostStepDef {
 		ArrayList<String> dbValidList = dbmanager.dbvalidationUser(newUser);
 		String dbUserId = dbValidList.get(0);
 		
-		ExtentCucumberAdapter.addTestStepLog("User from DB : " + dbValidList.toString());
+		ExtentCucumberAdapter.addTestStepLog("Newly created User record from DB : " + dbValidList.toString());
 		// DB validation for a post request for a newly created user_id
 		assertEquals(newUser, dbUserId);
 

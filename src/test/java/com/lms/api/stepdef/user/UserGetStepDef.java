@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.lms.api.dbmanager.Dbmanager;
 import com.lms.api.utilities.ExcelReaderUtil;
 import com.lms.api.utilities.PropertiesReaderUtil;
@@ -181,6 +182,7 @@ public class UserGetStepDef {
 		
 		// DB validation for a get request for an existing user_id
 		assertEquals(validId, dbUserId);
+		ExtentCucumberAdapter.addTestStepLog("Get specific user " +dbUserId+ " record from DB : " + dbValidList.toString());
 
 	}
 

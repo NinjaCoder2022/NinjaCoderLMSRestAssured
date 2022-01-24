@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.lms.api.dbmanager.Dbmanager;
 import com.lms.api.utilities.ExcelReaderUtil;
 import com.lms.api.utilities.PropertiesReaderUtil;
@@ -27,7 +28,6 @@ public class SkillPutStepDef {
 
 	RequestSpecification requestSpec;
 	Response response;
-	// int skill_id;
 	String sheetPut;
 	String path;
 
@@ -39,7 +39,6 @@ public class SkillPutStepDef {
 	public SkillPutStepDef() {
 		PropertiesReaderUtil propUtil = new PropertiesReaderUtil();
 		properties = propUtil.loadProperties();
-
 		dbmanager = new Dbmanager();
 
 	}
@@ -104,7 +103,11 @@ public class SkillPutStepDef {
 		// Retrieve a particular skill record from tbl_lms_skillmaster
 		ArrayList<String> dbValidList = dbmanager.dbvalidationSkill(skill_id);
 		String dbskill_Id = dbValidList.get(0);
-
+		boolean putResult = response.equals(dbValidList);
+		if(putResult = "true" != null)
+			ExtentCucumberAdapter.addTestStepLog("Failed to update the user");
+		else 
+			ExtentCucumberAdapter.addTestStepLog("User is updated: ");
 		// DB validation for a get request for an existing skill_id
 		assertEquals(skill_id, dbskill_Id);
 
@@ -146,14 +149,15 @@ public class SkillPutStepDef {
 	@Then("User should not be able to update the Skill name")
 	public void user_should_not_be_able_to_update_the_skill_name() throws IOException {
 		String expStatusCode = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "StatusCode");
-		String responseMessage = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "Message");
+		String expresponseMessage = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "Message");
 		System.out.println("Actual Response Status code=>  " + response.statusCode()
 				+ "  Expected Response Status code=>  " + expStatusCode);
-
-		System.out.println("Response Body is =>  " + response.asPrettyString());
-
+		JsonPath js = response.jsonPath();
+		Object resp_msg = js.get("message");
 		// Status code validation
 		assertEquals(Integer.parseInt(expStatusCode), response.statusCode());
-		System.out.println("Response Message =>  " + responseMessage);
+		System.out.println("Expected Response Message =>  " + expresponseMessage);
+		System.out.println("Response Body is =>  " + response.asPrettyString());
+		System.out.println("Response Message is =>  " + resp_msg);
 	}
 }

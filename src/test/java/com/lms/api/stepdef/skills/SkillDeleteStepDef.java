@@ -1,10 +1,11 @@
 package com.lms.api.stepdef.skills;
 
-import static org.testng.Assert.assertEquals;
+
 
 import java.io.IOException;
 import java.util.Properties;
 
+import com.lms.api.dbmanager.Dbmanager;
 import com.lms.api.utilities.ExcelReaderUtil;
 import com.lms.api.utilities.PropertiesReaderUtil;
 
@@ -17,7 +18,7 @@ import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
+import static org.junit.Assert.assertEquals;
 public class SkillDeleteStepDef {
 
 	RequestSpecification requestSpec;
@@ -28,7 +29,8 @@ public class SkillDeleteStepDef {
 	ExcelReaderUtil excelSheetReaderUtil;
 	Scenario scenario;
 	Properties properties;
-
+	Dbmanager dbmanager;
+	
 	public SkillDeleteStepDef() {
 		PropertiesReaderUtil propUtil = new PropertiesReaderUtil();
 		properties = propUtil.loadProperties();
@@ -63,30 +65,8 @@ public class SkillDeleteStepDef {
 
 	@When("User sends request with existing skill_id")
 	public void user_sends_request_with_existing_skill_id() throws IOException {
-		// requestSpecificationDelete();
-		String skill_id = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "Skill_id");
-		String getPath = properties.getProperty("skills.endpoint") + skill_id;
-
-		// get the skill object for the skill id
-		response = requestSpec.when().get(getPath);
-		String responseBody = response.asPrettyString();
-
-		/*
-		 * // if skill object is exist for given skill id , go directly to delete if
-		 * (response.statusCode() == 200 && responseBody.contains(skill_id)) {
-		 * requestSpecificationDelete(); } else {
-		 * 
-		 * // post - create a new skill object using post and get newly created skill id
-		 * String postPath=properties.getProperty("endpointPost"); String body =
-		 * "{\"skill_name\": \"DataScience\"}"; requestSpec.body(body);
-		 * requestSpec.header("Content-Type", "application/json"); response =
-		 * requestSpec.when().post(postPath); String newSkillId =
-		 * response.jsonPath().getString("skill_id");
-		 * 
-		 * // delete the newly created skill id requestSpec.body("");
-		 * path=properties.getProperty("endpointDelete") + newSkillId;
-		 * requestSpecificationDelete(); }
-		 */
+		requestSpecificationDelete();
+		
 	}
 
 	@Then("User should be able to delete the existing skill_id")

@@ -109,7 +109,7 @@ public class UserPutStepDef {
 		if(putResult = "true" != null)
 			ExtentCucumberAdapter.addTestStepLog("Failed to update the user");
 		else 
-			ExtentCucumberAdapter.addTestStepLog("User is updated");
+			ExtentCucumberAdapter.addTestStepLog("User is updated: ");
 		
 
 		// DB validation for a put request for updated user_id

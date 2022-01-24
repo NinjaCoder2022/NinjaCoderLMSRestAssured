@@ -3,15 +3,11 @@ package com.lms.api.stepdef.skillmap;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
-
-import org.testng.Assert;
-
 import com.lms.api.dbmanager.Dbmanager;
 import com.lms.api.utilities.ExcelReaderUtil;
 import com.lms.api.utilities.PropertiesReaderUtil;
@@ -160,13 +156,14 @@ public class UserSkillMapPostStepDef {
 		RequestSpec.header("Content-Type", "application/json");
 		RequestSpec.body(bodyExcel).log().all();
 
-		Assert.assertThrows(JsonSchemaValidationException.class, () -> {
+		/*Assert.assertThrows(JsonSchemaValidationException.class, () -> {
 
 			// Validation of requestBody with User schema
 			assertThat(bodyExcel, matchesJsonSchemaInClasspath("userSkillMapPost_schema.json"));
 			
-		});
-
+		});*/
+		assertThat("Schema Validation Failed",bodyExcel, matchesJsonSchemaInClasspath("userSkillMapPost_schema.json"));
+		System.out.println("Validated the schema");
 		response = RequestSpec.post(path);
 
 	}

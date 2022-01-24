@@ -11,7 +11,7 @@ import io.cucumber.junit.CucumberOptions;
 				tags = "@skill",
 				monochrome = true,
 
-plugin = {"pretty"}
+plugin = {"pretty","com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"}
 )
 
 public class SkillAPIRunner {
