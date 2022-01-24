@@ -3,8 +3,11 @@ package com.lms.api.stepdef.skillmap;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import org.testng.Assert;
@@ -20,6 +23,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.module.jsv.JsonSchemaValidationException;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -109,10 +113,17 @@ public class UserSkillMapPostStepDef {
 	}
 
 	@Then("User should receive valid status codes")
-	public void user_should_receive_valid_status_codes() throws IOException {
+	public void user_should_receive_valid_status_codes() throws IOException, SQLException {
 
 		thenMethodSpecificationPOST();
+		JsonPath js = response.jsonPath();
+		String newUser_skill_id = js.get("user_skill_id");
 
+		ArrayList<String> dbValidList = dbmanager.dbvalidationUserSkillMap(newUser_skill_id);
+		String dbUser_skill_id = dbValidList.get(0);
+
+		// DB validation for a get request for an existing user_id
+		assertEquals(newUser_skill_id, dbUser_skill_id );
 	}
 
 	@When("User sends request with inputs where skill id is null")

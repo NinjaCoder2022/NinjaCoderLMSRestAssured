@@ -3,8 +3,11 @@ package com.lms.api.stepdef.skillmap;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import com.lms.api.dbmanager.Dbmanager;
@@ -18,6 +21,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.http.Method;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -27,6 +31,7 @@ public class UserSkillMapGetStepDef {
 	Response response;
 	String path;
 	String sheetGet;
+	static String validId;
 
 	ExcelReaderUtil excelSheetReaderUtil;
 	Scenario scenario;
@@ -95,6 +100,7 @@ public class UserSkillMapGetStepDef {
 		requestSpec = RestAssured.given().auth().preemptive().basic(properties.getProperty("username"),
 				properties.getProperty("password"));
 		path = properties.getProperty("skillmap.endpoint.get");
+		
 
 	}
 
@@ -104,7 +110,7 @@ public class UserSkillMapGetStepDef {
 	}
 
 	@Then("User receives status code with valid json schemas")
-	public void user_receives_status_code_with_valid_json_schemas() throws IOException {
+	public void user_receives_status_code_with_valid_json_schemas() throws IOException, SQLException {
 		String expStatusCode = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "StatusCode");
 		String responseBody = response.prettyPrint();
 		
@@ -115,6 +121,23 @@ public class UserSkillMapGetStepDef {
 		
 		System.out.println("Response Status code is =>  " + response.statusCode());
 		System.out.println("Response Body is =>  " + responseBody);
+		
+		String UserSkillsId = excelSheetReaderUtil.getDataFromExcel(scenario.getName(),"UserSkills");
+		validId = UserSkillsId;
+		System.out.println("UserId from excel : " + validId);
+		
+		JsonPath js = response.jsonPath();
+		String rsUser_id = js.get("user_skill_id");
+		
+		// Retrieve a particular user record from tbl_lms_user
+		ArrayList<String> dbValidList = dbmanager.dbvalidationUserSkillMap(rsUser_id);
+		//String record = dbValidList.toString();
+		String dbUserSkillsId = dbValidList.get(0);
+
+		// DB validation for a get request for an existing user_id
+		assertEquals(validId, dbUserSkillsId);
+				
+		
 
 	}
 

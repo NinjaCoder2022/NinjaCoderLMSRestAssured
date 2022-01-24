@@ -155,7 +155,7 @@ public class UserSkillMapPutStepDef {
 		// Status code validation
 		assertEquals(Integer.parseInt(expStatusCode), response.statusCode());
 
-		// Retrieve a particular skill record from tbl_lms_skillmaster
+		// Retrieve a particular skill record from tbl_lms_skillmap
 		ArrayList<String> dbValidList = dbmanager.dbvalidationUserSkillMap(UserSkillsId);
 		String dbuser_skill_id = dbValidList.get(0);
 
