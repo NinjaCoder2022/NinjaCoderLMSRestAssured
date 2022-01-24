@@ -81,12 +81,12 @@
 			<artifactId>xml-path</artifactId>
 			<version>${rest-assured.version}</version>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>6.14.3</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency>-->
 		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -158,5 +158,54 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.3.1</version>
 		</dependency>
+			<dependency>
+    <groupId>io.cucumber</groupId>
+    <artifactId>cucumber-jvm</artifactId>
+    <version>6.8.1</version>
+    <type>pom</type>
+</dependency>
+ <dependency>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-surefire-plugin</artifactId>
+  <version>3.0.0-M5</version>
+  <type>maven-plugin</type>
+</dependency>
+<dependency>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <version>3.8.1</version>
+  <type>maven-plugin</type>
+</dependency>
 	</dependencies>
+	<build>
+   
+    <plugins>
+      <!-- Rerun unittests with the multirelease jar, cannot be done with exploded directory of classes -->
+    <plugin>
+    <artifactId>maven-failsafe-plugin</artifactId>
+    <version>3.0.0-M3</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+            </goals>
+            <configuration>
+               <includes>
+               <include> **/Runner.java</include>
+               </includes>
+                <properties>  
+    </properties>
+               <parallel>methods</parallel>
+               <threadCount>20</threadCount>
+               <perCoreThreadCount>true</perCoreThreadCount>
+                <!-- <reportsDirectory>
+    ${project.build.directory}/failsafe-reports_${surefire.forkNumber}
+</reportsDirectory>-->
+            </configuration>
+        </execution>
+    </executions>
+</plugin> 
+    </plugins>
+  </build>
 </project>

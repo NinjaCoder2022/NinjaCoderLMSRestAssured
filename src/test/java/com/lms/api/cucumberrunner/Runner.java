@@ -15,8 +15,9 @@ import io.cucumber.junit.CucumberOptions;
 					// tags = "@blank",
 //@CucumberOptions(features = "src/test/resources/FeatureFiles/UserSkillMapGetStepDef.feature", glue = {"com/lms/api/stepdef/skillmap/"},
 monochrome=true,
-dryRun = false,
-plugin = {"pretty","com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"}
+//dryRun = false,
+plugin = {"pretty","com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
+"timeline:test-output-thread/"}
 
 )
 public class Runner {

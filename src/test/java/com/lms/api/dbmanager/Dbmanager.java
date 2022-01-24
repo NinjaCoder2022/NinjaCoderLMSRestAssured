@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 public class Dbmanager {
 
-	String url = "jdbc:postgresql://localhost:5432/LMS_DB";
+	String url = "jdbc:postgresql://localhost:5454/lmssss";
 	String user = "postgres";
-	String password = "Dunu12345";
+	String password = "admin";
 	Statement stmt;
 	Connection con;
 	ResultSet rs;
