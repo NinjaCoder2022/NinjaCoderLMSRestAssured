@@ -13,12 +13,13 @@ import java.util.ArrayList;
 
 public class Dbmanager {
 
-	String url = "jdbc:postgresql://localhost:5454/lmssss";
+	String url = "jdbc:postgresql://localhost:5432/LMS_DB";
 	String user = "postgres";
-	String password = "admin";
+	String password = "postgres";
 	Statement stmt;
 	Connection con;
 	ResultSet rs;
+	boolean chknull;
 	private String query;
 
 	public String getQuery() {
@@ -48,6 +49,7 @@ public class Dbmanager {
 
 	public ArrayList<String> dbvalidationSkill(String id) throws SQLException {
 
+		chknull = false;
 		String query = "select * from tbl_lms_skill_master where skill_id ='" + id + "'";
 		setQuery(query);
 		createConnection();
@@ -71,14 +73,18 @@ public class Dbmanager {
 		}
 		// last step
 		closeConnection();
-		return null;
+		if (chknull == false) {
+			ArrayList<String> deleteChk = new ArrayList<String>();
+			deleteChk.add("Deleted");
+			return deleteChk;
+		} else
+			return null;
 	}
 
 	// For User API
 	public ArrayList<String> dbvalidationUser(String id) throws SQLException {
-
+		chknull = false;
 		String query = "select * from tbl_lms_user where user_id ='" + id + "'";
-		// String query = "select * from tbl_lms_user where user_id = 'U329'";
 		setQuery(query);
 		createConnection();
 		ResultSet rs = executeQuery();
@@ -112,17 +118,23 @@ public class Dbmanager {
 			resultlist.add(last_mod_time);
 			System.out.println("Record from Database : " + resultlist);
 
+			chknull = true;
 			return resultlist;
 
 		}
 		// last step
 		closeConnection();
-		return null;
+		if (chknull == false) {
+			ArrayList<String> deleteChk = new ArrayList<String>();
+			deleteChk.add("Deleted");
+			return deleteChk;
+		} else
+			return null;
 
 	}
 
 	public ArrayList<String> dbvalidationUserSkillMap(String id) throws SQLException {
-
+		chknull = false;
 		String query = "select * from tbl_lms_userskill_map where user_skill_id ='" + id + "'";
 		setQuery(query);
 		createConnection();
@@ -151,7 +163,12 @@ public class Dbmanager {
 
 		// last step
 		closeConnection();
-		return null;
+		if (chknull == false) {
+			ArrayList<String> deleteChk = new ArrayList<String>();
+			deleteChk.add("Deleted");
+			return deleteChk;
+		} else
+			return null;
 
 	}
 

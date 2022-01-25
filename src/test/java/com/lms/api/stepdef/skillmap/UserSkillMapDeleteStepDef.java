@@ -1,10 +1,12 @@
 package com.lms.api.stepdef.skillmap;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 
+import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.lms.api.dbmanager.Dbmanager;
 import com.lms.api.utilities.ExcelReaderUtil;
 import com.lms.api.utilities.PropertiesReaderUtil;
@@ -75,17 +77,28 @@ public class UserSkillMapDeleteStepDef {
 
 	@Then("User should recieve a success status code")
 	public void User_should_recieve_a_success_status_code() throws IOException {
-
+		String deleteUserSkillsId = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "UserSkills");
 		String expStatusCode = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "StatusCode");
 		String expMessage = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "Message");
 		System.out.println("Actual Response Status code=>  " + response.statusCode()
 				+ "  Expected Response Status code=>  " + expStatusCode);
 
-		int statuscode = response.statusCode();
 		assertEquals(Integer.parseInt(expStatusCode), response.statusCode());
+		
+		try {
+			//retrieve an array list from DBmanager for delete request
+			ArrayList<String> dbValidList = dbmanager.dbvalidationUser(deleteUserSkillsId);
 
-		String responseBody = response.prettyPrint();
-		System.out.println("Response Body is =>  " + responseBody);
+			if (dbValidList.get(0) == "Deleted")
+				ExtentCucumberAdapter.addTestStepLog("DB validation for UserSkills " + deleteUserSkillsId + " is Deleted");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Expected message is: " + expMessage);
+		System.out.println("Response Body is =>  " + response.prettyPrint());
+		
 
 	}
 
@@ -117,11 +130,10 @@ public class UserSkillMapDeleteStepDef {
 		System.out.println("Actual Response Status code=>  " + response.statusCode()
 				+ "  Expected Response Status code=>  " + expStatusCode);
 
-		int statuscode = response.statusCode();
 		assertEquals(Integer.parseInt(expStatusCode), response.statusCode());
 
-		String responseBody = response.prettyPrint();
-		System.out.println("Response Body is =>  " + responseBody);
+		System.out.println("Expected message is: " + expMessage);
+		System.out.println("Response Body is =>  " + response.prettyPrint());
 
 	}
 

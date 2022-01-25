@@ -90,6 +90,7 @@ public class UserDeleteStepDef {
 
 	@Then("User should receive status code and message for delete")
 	public void user_should_receive_status_code_and_message_for_delete() throws Exception {
+		String deleteUser = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "UserId");
 		String expStatusCode = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "StatusCode");
 		String expMessage = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "Message");
 		// System.out.println("Expected response code: " + expStatusCode + "Expected
@@ -104,21 +105,17 @@ public class UserDeleteStepDef {
 		System.out.println(js);
 		response.then().assertThat().extract().asString().contains("Deleted");
 
-		String deleteUser = "U297";
 		try {
-		// Retrieve an auto generated user_id for newly created user from tbl_lms_user
-		ArrayList<String> dbValidList = dbmanager.dbvalidationUser(deleteUser);
-		//System.out.println(dbValidList.);
-		if (dbValidList.isEmpty()) 
-			//System.out.println("User Deleted");
-		ExtentCucumberAdapter.addTestStepLog("User " + deleteUser + " is Deleted");
-	
-		}catch(Exception e){
+			//retrieve an arraylist from DBmanager
+			ArrayList<String> dbValidList = dbmanager.dbvalidationUser(deleteUser);
+
+			if (dbValidList.get(0) == "Deleted")
+				ExtentCucumberAdapter.addTestStepLog("DB validation for User " + deleteUser + " is Deleted");
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// DB validation for a post request for a newly created user_id
-		//assertEquals(deleteUser, dbUserId);
-
+		
 		// System.out.println("Response Status code is => " + response.statusCode());
 		// System.out.println("Response Body is => " + responseBody);
 	}
@@ -130,7 +127,6 @@ public class UserDeleteStepDef {
 				properties.getProperty("password"));
 
 		path = properties.getProperty("endpointDelete");
-
 	}
 
 	@When("User sends request without a user_id")
@@ -140,13 +136,12 @@ public class UserDeleteStepDef {
 		response = RequestSpec.when().delete(path);
 	}
 
-	@Then("User should receive status code {int} for delete without parameter")
-	public void user_should_receive_status_code_for_delete_without_parameter(Integer expStatusCode) {
+	@Then("User should receive status code <nfStatusCode> for delete without parameter")
+	public void user_should_receive_status_code_nf_status_code_for_delete_without_parameter() {
 		String responseBody = response.prettyPrint();
-		// System.out.println(response.statusCode());
-		// assertEquals(expStatusCode, response.statusCode());
-		response.then().statusCode(expStatusCode);
-
+		String expStatusCode = properties.getProperty("nfStatusCode");
+		// Status code validation
+		assertEquals(Integer.parseInt(expStatusCode), response.statusCode());
 		// System.out.println("Response Status code is => " + response.statusCode());
 		// System.out.println("Response Body is => " + responseBody);
 	}

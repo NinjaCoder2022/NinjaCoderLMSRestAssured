@@ -7,8 +7,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.testng.Assert;
-
 import com.lms.api.dbmanager.Dbmanager;
 import com.lms.api.utilities.ExcelReaderUtil;
 import com.lms.api.utilities.PropertiesReaderUtil;
@@ -19,7 +17,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
-import io.restassured.module.jsv.JsonSchemaValidationException;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -149,12 +146,12 @@ public class UserSkillMapPostStepDef {
 		RequestSpec.header("Content-Type", "application/json");
 		RequestSpec.body(bodyExcel).log().all();
 
-		Assert.assertThrows(JsonSchemaValidationException.class, () -> {
+		//Assert.assertThrows(JsonSchemaValidationException.class, () -> {
 
 			// Validation of requestBody with User schema
 			assertThat(bodyExcel, matchesJsonSchemaInClasspath("userSkillMapPost_schema.json"));
 			
-		});
+		//});
 
 		response = RequestSpec.post(path);
 

@@ -29,6 +29,7 @@ public class UserPutStepDef {
 	String userId;
 	String path;
 	String sheetPut;
+	static String bodyarray[];
 
 	static String exUserId;
 
@@ -55,6 +56,10 @@ public class UserPutStepDef {
 	public void requestSpecification() throws Exception {
 		RequestSpec.header("Content-Type", "application/json");
 		String bodyExcel = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "Body");
+		String bodyarray[] = bodyExcel.split(",");
+		for(String e: bodyarray) {
+			System.out.println(e);
+		}
 		RequestSpec.body(bodyExcel).log().all();
 
 		// Validation of requestBody with User schema
@@ -94,7 +99,7 @@ public class UserPutStepDef {
 		JsonPath js = response.jsonPath();
 		System.out.println(response.statusCode());
 		// Put Schema Validation
-		assertThat(responseBody, matchesJsonSchemaInClasspath("userResponse_schema.json"));
+		assertThat("Schema Validation Passed",responseBody, matchesJsonSchemaInClasspath("userResponse_schema.json"));
 
 		// Status code validation
 		assertEquals(Integer.parseInt(expStatusCode), response.statusCode());

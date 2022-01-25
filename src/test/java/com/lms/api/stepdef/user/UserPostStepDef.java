@@ -72,8 +72,10 @@ public class UserPostStepDef {
 	}
 
 	@When("User sends request with valid inputs")
-	public void user_sends_request_with_valid_inputs() throws IOException {
-		String bodyExcel = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "Body");
+	public void user_sends_request_with_valid_inputs() throws Exception {
+		
+		requestSpecificationPost();
+/*		String bodyExcel = excelSheetReaderUtil.getDataFromExcel(scenario.getName(), "Body");
 		requestSpec.header("Content-Type", "application/json");
 		requestSpec.body(bodyExcel).log().all();
 
@@ -82,7 +84,7 @@ public class UserPostStepDef {
 		System.out.println("Validated the schema");
 		response = requestSpec.post(path);
 		// response = RequestSpec.request(Method.POST, path);
-
+*/
 	}
 
 	@Then("User should receive status code and message for post")
@@ -98,8 +100,7 @@ public class UserPostStepDef {
 		//String responseSchema = System.getProperty("/src/test/resources/user_response_schema.json");
 		// Post Schema Validation
 		assertThat(responseBody, matchesJsonSchemaInClasspath("userResponse_schema.json"));
-		//assertThat(responseBody,ma)
-		
+				
 		//Status code validation
 		assertEquals(Integer.parseInt(expStatusCode), response.statusCode());
 		
